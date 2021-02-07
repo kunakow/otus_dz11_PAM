@@ -81,7 +81,7 @@ usermod -aG admin ucheck
 3. Привести файл /etc/pam.d/sshd к виду:
 ```
 #%PAM-1.0
-auth       required     
+auth       required     pam_scrip.so       # Добавить модуль
 auth       required     pam_sepermit.so
 auth       substack     password-auth
 auth       include      postlogin
@@ -103,3 +103,17 @@ session    include      postlogin
 -session   optional     pam_reauthorize.so prepare
 ```
 
+4. Привести файл /etc/pam_script к виду:
+```
+#!/bin/bash
+if [[ `grep $PAM_USER /etc/group | grep 'admin'` ]]
+then
+exit 0
+fi
+if [[ `date +%u` > 5 ]]
+then
+exit 1
+fi
+```
+
+Если пользователь входит в группу admin, его вход разрешён всегда. Если пользователь не состоит в группе admin, вход разрешён только по будням.
