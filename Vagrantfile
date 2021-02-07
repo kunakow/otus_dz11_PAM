@@ -15,8 +15,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "centos/7"
   
   config.vm.define "pam" do |pam|
-        nfsc.vm.hostname = "pam"
-    nfsc.vm.provision "shell", path: "install.sh"
+    pam.vm.provision "shell", path: "install.sh"
   end
 
   # Disable automatic box update checking. If you disable this, then
